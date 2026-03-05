@@ -1,0 +1,148 @@
+Folder PATH listing for volume Windows
+Volume serial number is 7CD5-0C3F
+C:.
+¦   .env
+¦   .gitignore
+¦   folder_structure.txt
+¦   main.py
+¦   README.md
+¦   requirements.txt
+¦   row_data.csv
+¦   
++---api
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---alerts
+¦   ¦       alert_manager.py
+¦   ¦       alert_notifications.py
+¦   ¦       __init__.py
+¦   ¦       
+¦   +---blockchain
+¦   ¦       chain_of_custody.py
+¦   ¦       evidence_storage.py
+¦   ¦       __init__.py
+¦   ¦       
+¦   +---honeypot
+¦   ¦       honeypot_manager.py
+¦   ¦       honeypot_profile_setup.py
+¦   ¦       __init__.py
+¦   ¦       
+¦   +---keyword_management
+¦   ¦   ¦   keyword_controller.py
+¦   ¦   ¦   keyword_service.py
+¦   ¦   ¦   keyword_utils.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           keyword_controller.cpython-39.pyc
+¦   ¦           keyword_service.cpython-39.pyc
+¦   ¦           
+¦   +---scraping
+¦   ¦   ¦   google_scraper.py
+¦   ¦   ¦   instagram_scraper.py
+¦   ¦   ¦   scraper_manager.py
+¦   ¦   ¦   telegram_scraper.py
+¦   ¦   ¦   whatsapp_scraper.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           google_scraper.cpython-39.pyc
+¦   ¦           instagram_scraper.cpython-39.pyc
+¦   ¦           scraper_manager.cpython-39.pyc
+¦   ¦           telegram_scraper.cpython-39.pyc
+¦   ¦           whatsapp_scraper.cpython-39.pyc
+¦   ¦           __init__.cpython-39.pyc
+¦   ¦           
+¦   +---__pycache__
+¦           __init__.cpython-39.pyc
+¦           
++---backend
+¦   ¦   app.py
+¦   ¦   celery_config.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---models
+¦   ¦   ¦   keyword.py
+¦   ¦   ¦   raw_data.py
+¦   ¦   ¦   user.py
+¦   ¦   ¦   __init__.py
+¦   ¦   ¦   
+¦   ¦   +---__pycache__
+¦   ¦           keyword.cpython-39.pyc
+¦   ¦           raw_data.cpython-39.pyc
+¦   ¦           __init__.cpython-39.pyc
+¦   ¦           
+¦   +---services
+¦   ¦       behavior_analysis.py
+¦   ¦       data_analysis.py
+¦   ¦       triangulation.py
+¦   ¦       __init__.py
+¦   ¦       
+¦   +---__pycache__
+¦           app.cpython-39.pyc
+¦           __init__.cpython-39.pyc
+¦           
++---config
+¦   ¦   blockchain_config.py
+¦   ¦   config.py
+¦   ¦   db_config.py
+¦   ¦   logging_config.py
+¦   ¦   
+¦   +---__pycache__
+¦           DB_CONFIG.cpython-39.pyc
+¦           
++---database
+¦   ¦   db_connection.py
+¦   ¦   db_queries.py
+¦   ¦   elasticsearch_config.py
+¦   ¦   schema.sql
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---__pycache__
+¦           db_connection.cpython-39.pyc
+¦           db_queries.cpython-39.pyc
+¦           __init__.cpython-39.pyc
+¦           
++---frontend
+¦   +---static
+¦   ¦   +---css
+¦   ¦   ¦       style.css
+¦   ¦   ¦       
+¦   ¦   +---js
+¦   ¦           script.js
+¦   ¦           
+¦   +---templates
+¦           dashboard.html
+¦           honeypots.html
+¦           index.html
+¦           keywords.html
+¦           reports.html
+¦           
++---machine_learning
+¦   ¦   inference.py
+¦   ¦   roberta_finetune.py
+¦   ¦   text_classification.py
+¦   ¦   __init__.py
+¦   ¦   
+¦   +---training
+¦       +---dataset
+¦               placeholder.txt
+¦               
++---monitoring
+¦       grafana_dashboard.py
+¦       logstash_pipeline.py
+¦       sentry_integration.py
+¦       __init__.py
+¦       
++---utils
+    ¦   alert_utils.py
+    ¦   api_utils.py
+    ¦   encryption_utils.py
+    ¦   keyword_utils.py
+    ¦   key_genrator.py
+    ¦   __init__.py
+    ¦   
+    +---__pycache__
+            encryption_utils.cpython-39.pyc
+            keyword_utils.cpython-39.pyc
+            __init__.cpython-39.pyc
+            

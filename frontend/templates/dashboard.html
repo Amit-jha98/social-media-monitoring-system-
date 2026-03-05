@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Honeypots</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Ensure the content column displays all text */
+        .content-cell {
+            white-space: normal;
+            word-wrap: break-word;
+        }
+        /* Style links and images */
+        .content-cell a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .content-cell a:hover {
+            text-decoration: underline;
+        }
+        .content-cell img {
+            max-width: 100%;
+            height: auto;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="{{ url_for('index') }}">NCB Monitoring</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('honeypots') }}">Honeypots</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('keywords') }}">Keywords</a></li>
+                <li class="nav-item"><a class="nav-link" href="{{ url_for('reports') }}">Reports</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1 class="text-center mb-4">Scraping Dashboard</h1>
+        
+        <!-- Search bar -->
+        <div class="text-center mb-3">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search content..." onkeyup="searchData()">
+        </div>
+
+        <!-- Button to start scraping -->
+        <div class="text-center mb-3">
+            <button class="btn btn-primary" onclick="startScraping()">Start Scraping</button>
+        </div>
+
+        <!-- Notifications display -->
+        <div id="notifications" class="alert alert-info" style="display: none;"></div>
+
+        <div class="container mt-4">
+            <h2 class="text-center mb-3">Scraped Data</h2>
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" id="scrapedDataTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>Keyword</th>
+                            <th>Platform</th>
+                            <th>Content</th>
+                            <th>Timestamp</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Function to start scraping
+        function startScraping() {
+            fetch('/api/start_scraping')
+                .then(response => response.json())
+                .then(data => {
+                    const notificationDiv = document.getElementById("notifications");
+                    if (data.notifications) {
+                        notificationDiv.innerText = data.notifications.join(", ");
+                        notificationDiv.style.display = "block";
+                    }
+                    fetchStoredData(); // Refresh data after scraping
+                })
+                .catch(error => console.error("Error starting scraping:", error));
+        }
+
+        // Function to fetch stored data and display it in the table
+
+        // Function to fetch stored data and display it in the table
+        function fetchStoredData() {
+            fetch('/api/stored_data')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('scrapedDataTable').getElementsByTagName('tbody')[0];
+                    tableBody.innerHTML = "";  // Clear previous data
+
+                    data.forEach(row => {
+                        const newRow = tableBody.insertRow();
+                        newRow.insertCell(0).innerText = row.keyword;
+                        newRow.insertCell(1).innerText = row.platform;
+
+                        // Create content cell and render images, links, and Instagram handles
+                        const contentCell = newRow.insertCell(2);
+                        contentCell.classList.add("content-cell");
+
+                        // Prepare the content for displaying with clickable links
+                        let content = row.content;
+
+                        // Regex patterns for URLs, images, and both formats of Instagram handles
+                        const linkRegex = /(https?:\/\/[^\s]+)/g;
+                        const imageRegex = /(https?:\/\/[^\s]+\.(jpg|jpeg|png|gif|bmp))/g;
+                        const instagramHandleRegex = /@(\w+)|\(@(\w+)\)/g;
+
+                        // Replace image URLs with image tags
+                        content = content.replace(imageRegex, function(url) {
+                            return `<img src="${url}" alt="Image"><br>`;
+                        });
+
+                        // Replace URLs with clickable links
+                        content = content.replace(linkRegex, function(url) {
+                            return `<a href="${url}" target="_blank">${url}</a>`;
+                        });
+
+                        // Replace Instagram handles in both `@username` and `(@username)` formats with clickable profile links
+                        content = content.replace(instagramHandleRegex, function(match, username1, username2) {
+                            const username = username1 || username2;  // Use whichever is matched
+                            return `<a href="https://instagram.com/${username}" target="_blank">@${username}</a>`;
+                        });
+
+                        // Insert the content into the cell
+                        contentCell.innerHTML = content;
+
+                        // Add timestamp
+                        newRow.insertCell(3).innerText = new Date(row.timestamp).toLocaleString();
+                    });
+                })
+                .catch(error => console.error("Error fetching stored data:", error));
+        }
+
+        // Function to search through the data based on input
+        function searchData() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const tableRows = document.getElementById('scrapedDataTable').getElementsByTagName('tr');
+
+            for (let i = 0; i < tableRows.length; i++) {
+                const row = tableRows[i];
+                const contentCell = row.cells[2]; // Content column
+
+                if (contentCell) {
+                    const contentText = contentCell.innerText.toLowerCase();
+                    if (contentText.includes(input)) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            }
+        }
+
+        // Fetch stored data on page load
+        window.onload = fetchStoredData;
+    </script>
+</body>
+</html>

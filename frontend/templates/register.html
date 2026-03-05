@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ANMS</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+    <style>
+        body { background-color: #f4f6f9; }
+        .register-container {
+            max-width: 420px;
+            margin: 80px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        .register-container h2 { text-align: center; margin-bottom: 25px; color: #343a40; }
+        .alert { display: none; }
+        .password-strength { font-size: 0.85em; margin-top: 4px; }
+        .strength-weak { color: #dc3545; }
+        .strength-medium { color: #ffc107; }
+        .strength-strong { color: #28a745; }
+    </style>
+</head>
+<body>
+    <div class="register-container">
+        <h2>Create Account</h2>
+        <div id="alertBox" class="alert" role="alert"></div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" class="form-control" placeholder="Choose a username"
+                       required minlength="3" maxlength="50" pattern="[\w]+" autocomplete="username">
+                <small class="form-text text-muted">3-50 characters. Letters, numbers, and underscores only.</small>
+            </div>
+            <div class="form-group">
+                <label for="email">Email (optional)</label>
+                <input type="email" id="email" class="form-control" placeholder="Enter email" maxlength="100" autocomplete="email">
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" class="form-control" placeholder="Choose a password"
+                       required minlength="8" maxlength="128" autocomplete="new-password" oninput="checkPasswordStrength()">
+                <div id="passwordStrength" class="password-strength"></div>
+            </div>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password</label>
+                <input type="password" id="confirmPassword" class="form-control" placeholder="Confirm password"
+                       required minlength="8" maxlength="128" autocomplete="new-password">
+            </div>
+            <button type="submit" class="btn btn-success btn-block">Register</button>
+        </form>
+        <p class="text-center mt-3">
+            Already have an account? <a href="/login">Login here</a>
+        </p>
+    </div>
+
+    <script>
+        function checkPasswordStrength() {
+            const password = document.getElementById("password").value;
+            const indicator = document.getElementById("passwordStrength");
+            if (password.length < 8) {
+                indicator.textContent = "Too short";
+                indicator.className = "password-strength strength-weak";
+            } else if (password.length < 12 || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+                indicator.textContent = "Medium strength";
+                indicator.className = "password-strength strength-medium";
+            } else {
+                indicator.textContent = "Strong password";
+                indicator.className = "password-strength strength-strong";
+            }
+        }
+
+        document.getElementById("registerForm").addEventListener("submit", async function(e) {
+            e.preventDefault();
+            const alertBox = document.getElementById("alertBox");
+            alertBox.style.display = "none";
+
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirmPassword").value;
+
+            if (password !== confirmPassword) {
+                alertBox.className = "alert alert-danger";
+                alertBox.textContent = "Passwords do not match";
+                alertBox.style.display = "block";
+                return;
+            }
+
+            const payload = {
+                username: document.getElementById("username").value.trim(),
+                password: password,
+                email: document.getElementById("email").value.trim() || undefined
+            };
+
+            try {
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    localStorage.setItem("jwt_token", data.token);
+                    localStorage.setItem("user", JSON.stringify(data.user));
+                    window.location.href = "/";
+                } else {
+                    alertBox.className = "alert alert-danger";
+                    alertBox.textContent = data.error || "Registration failed";
+                    alertBox.style.display = "block";
+                }
+            } catch (err) {
+                alertBox.className = "alert alert-danger";
+                alertBox.textContent = "Network error. Please try again.";
+                alertBox.style.display = "block";
+            }
+        });
+    </script>
+</body>
+</html>

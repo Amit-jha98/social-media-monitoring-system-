@@ -1,0 +1,91 @@
+# Python cache and compiled files
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.pkl
+
+# Environment variables and secrets
+.env
+!.env.example
+*.pem
+
+# MySQL and database-related files
+*.db
+*.sqlite3
+mysql/data/
+
+prompt tool/node_modules/@next/swc-win32-x64-msvc/next-swc.win32-x64-msvc.node
+
+# Flask-related files
+instance/
+*.log
+
+# Celery beat schedule file
+celerybeat-schedule
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Node modules for frontend (if applicable)
+frontend/node_modules/
+frontend/build/
+frontend/.parcel-cache/
+frontend/.next/
+frontend/out/
+
+# Logs and debugging files
+*.log
+*.out
+*.err
+logs/
+
+# VS Code settings
+.vscode/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Byte-compiled or generated files
+*.pyc
+
+# Sentry and monitoring configurations (if applicable)
+.sentryclirc
+
+# Elasticsearch data (if local instance is used)
+elasticsearch/data/
+elasticsearch/logs/
+
+# Coverage reports
+htmlcov/
+.coverage
+.coverage.*
+
+# Files created by pytest
+.pytest_cache/
+
+# Machine learning and model-related files
+*.h5
+*.ckpt
+*.pt
+*.pth
+*.onnx
+model/
+
+# Hugging Face Transformers cache
+transformers_cache/
+cache/
+
+# Scrap data and API responses
+scraped_data/
+api/scraping/*.csv
+api/scraping/*.json
+
+# npm debug logs
+npm-debug.log*
+
+# Ignore compiled HTML, CSS, and JavaScript files if you're using a build tool
+frontend/dist/
+frontend/static/
+frontend/public/

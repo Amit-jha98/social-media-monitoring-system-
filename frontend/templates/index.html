@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ANMS - Advanced Narcotics Monitoring System</title>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+          crossorigin="anonymous">
+    <style>
+        .user-bar { color: #ccc; font-size: 0.9em; }
+        .feature-card { min-height: 180px; }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">ANMS Monitoring</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active"><a class="nav-link" href="/">Home</a></li>
+                <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                <li class="nav-item"><a class="nav-link" href="/honeypots">Honeypots</a></li>
+                <li class="nav-item"><a class="nav-link" href="/keywords">Keywords</a></li>
+                <li class="nav-item"><a class="nav-link" href="/reports">Reports</a></li>
+            </ul>
+            <span class="navbar-text user-bar" id="userInfo"></span>
+            <button class="btn btn-outline-light btn-sm ml-2" onclick="logout()">Logout</button>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="jumbotron bg-light">
+            <h1 class="display-4">Advanced Narcotics Monitoring System</h1>
+            <p class="lead">AI-powered platform for monitoring illicit narcotics activity across social media and messaging platforms.</p>
+            <hr class="my-4">
+            <p>Secure, authenticated access with JWT tokens, role-based authorization, and comprehensive audit logging.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Multi-Platform Scraping</h5>
+                        <p class="card-text">Monitor Telegram, WhatsApp, Instagram and Google for narcotics-related content using keyword-based surveillance.</p>
+                        <a href="/dashboard" class="btn btn-primary btn-sm">Go to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <h5 class="card-title">ML Classification</h5>
+                        <p class="card-text">RoBERTa-based text classification for automatic detection of suspicious content with high accuracy.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mb-3">
+                <div class="card feature-card">
+                    <div class="card-body">
+                        <h5 class="card-title">Honeypot Operations</h5>
+                        <p class="card-text">Create and manage undercover monitoring profiles for proactive intelligence gathering (Admin only).</p>
+                        <a href="/honeypots" class="btn btn-warning btn-sm">Manage Honeypots</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-2">
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Keyword Management</h5>
+                        <p class="card-text">Configure monitoring keywords and track suspicious terms across all platforms.</p>
+                        <a href="/keywords" class="btn btn-success btn-sm">Manage Keywords</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 mb-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Reports & Analytics</h5>
+                        <p class="card-text">View behavioral analysis, data triangulation, and comprehensive monitoring reports.</p>
+                        <a href="/reports" class="btn btn-info btn-sm">View Reports</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"
+            integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0="
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+            crossorigin="anonymous"></script>
+    <script>
+        function getAuthHeaders() {
+            const token = localStorage.getItem('jwt_token');
+            return token ? { 'Authorization': 'Bearer ' + token } : {};
+        }
+        function showUser() {
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            if (user.username) document.getElementById('userInfo').textContent = 'Logged in as: ' + user.username;
+        }
+        function logout() {
+            fetch('/api/auth/logout', { method: 'POST', headers: getAuthHeaders() });
+            localStorage.removeItem('jwt_token');
+            localStorage.removeItem('user');
+            window.location.href = '/login';
+        }
+        window.onload = showUser;
+    </script>
+</body>
+</html>
